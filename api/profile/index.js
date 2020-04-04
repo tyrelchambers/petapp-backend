@@ -21,14 +21,16 @@ app.post('/me', authHandler, async (req, res, next) => {
   try {
     const {
       firstName,
-      lastName
+      lastName,
+      phoneNumber
     } = req.body;
 
     const profile = await knex('users').where({
       uuid: res.locals.userId
     }).update({
       firstName,
-      lastName
+      lastName,
+      phoneNumber
     }).returning([...fields])
 
     res.send(profile)

@@ -9,6 +9,7 @@ import auth from './api/auth/index'
 import profile from './api/profile/index'
 import serials from './api/serials/index'
 import vaccines from './api/vaccines/index'
+import contacts from './api/contacts/index'
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/auth', auth);
 app.use('/api/profile', profile);
 app.use('/api/serials', serials);
 app.use('/api/vaccines', vaccines);
+app.use('/api/contacts', contacts)
 
 app.use(function (err, req, res, next) {
   console.error(err.message)

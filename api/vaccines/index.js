@@ -13,7 +13,7 @@ app.post('/new', authHandler, async (req, res, next) => {
     } = req.body;
 
     const vaccinesToInsert = vaccines.map(x => 
-      ({uuid:uuidv4(), serial_id: serialId, type: x.type, administered: x.administered, expiry: x.expiry})
+      x.type ? ({uuid:uuidv4(), serial_id: serialId, type: x.type, administered: x.administered, expiry: x.expiry}) : null
     )
 
     await knex('vaccines').insert(vaccinesToInsert) 

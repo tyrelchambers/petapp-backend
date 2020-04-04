@@ -43,6 +43,30 @@ app.get('/', authHandler, async (req,res,next) => {
   }
 })
 
+app.get('/:id', async (req, res, next) => {
+  try {
+    const {
+      id
+    } = req.params;
+
+    const serial = await knex('serials').where({
+      serialNumber: id
+    })
+
+    const vaccines = await knex('vaccines').where({
+      serial_id: serial[0].uuid
+    })
+
+
+    res.send({
+      serial: serial[0],
+      vaccines
+    })
+  } catch (error) {
+    next(error);
+  }
+})
+
 app.delete('/:id', authHandler, async (req, res, next) => {
   try {
     const {
