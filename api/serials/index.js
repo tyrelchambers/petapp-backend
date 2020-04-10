@@ -27,21 +27,30 @@ app.post('/new', authHandler, async (req, res ,next) => {
   }
 })
 
-app.get('/', authHandler, async (req,res,next) => {
+app.put('/edit', authHandler, async (req, res, next) => {
   try {
-    const serials = await knex.select(knex.ref('uuid').as('UserId')).from('users').where({
-      uuid: res.locals.userId
-    }).then(rows => {
-      return knex('serials').where({
-        user_id: rows[0].UserId
-      })
-    });
+    const {
+      serialNumber,
+      petName,
+      breed,
+      uuid
+    } = req.body;
 
-    res.send(serials)
+    const serial = await knex('serials').where({
+      uuid
+    }).update({
+      serialNumber,
+      petName,
+      breed,
+    }).returning('*')
+
+    res.send(serial[0])
+
   } catch (error) {
     next(error)
   }
 })
+
 
 app.get('/:id', async (req, res, next) => {
   try {
@@ -67,6 +76,29 @@ app.get('/:id', async (req, res, next) => {
   }
 })
 
+app.get('/private/:uuid', authHandler, async (req, res, next) => {
+  try {
+    const {
+      uuid
+    } = req.params;
+
+    const serial = await knex('serials').where({
+      uuid
+    })
+
+    const vaccines = await knex('vaccines').where({
+      serial_id: serial[0].uuid
+    })
+
+    res.send({
+      serial: serial[0],
+      vaccines
+    })
+  } catch (error) {
+    next(error);
+  }
+})
+
 app.delete('/:id', authHandler, async (req, res, next) => {
   try {
     const {
@@ -78,6 +110,23 @@ app.delete('/:id', authHandler, async (req, res, next) => {
     }).del();
 
     res.sendStatus(200)
+  } catch (error) {
+    next(error)
+  }
+})
+
+ 
+app.get('/', authHandler, async (req,res,next) => {
+  try {
+    const serials = await knex.select(knex.ref('uuid').as('UserId')).from('users').where({
+      uuid: res.locals.userId
+    }).then(rows => {
+      return knex('serials').where({
+        user_id: rows[0].UserId
+      })
+    });
+
+    res.send(serials)
   } catch (error) {
     next(error)
   }
