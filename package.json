@@ -23,7 +23,7 @@
     "express-sanitizer": "^1.0.5",
     "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.20.13",
+    "knex": "^2.4.0",
     "nodemon": "^2.0.2",
     "pg": "^8.0.0",
     "uuid": "^7.0.2"
